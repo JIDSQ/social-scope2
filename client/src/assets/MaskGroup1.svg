@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="488" height="160" viewBox="0 0 488 160">
+  <defs>
+    <filter id="Rectangle_1728" x="-15" y="-12" width="518" height="190" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feFlood flood-opacity="0.2"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <clipPath id="clip-path">
+      <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#Rectangle_1728)">
+        <path id="Rectangle_1728-2" data-name="Rectangle 1728" d="M10,0H478a10,10,0,0,1,10,10V160a0,0,0,0,1,0,0H0a0,0,0,0,1,0,0V10A10,10,0,0,1,10,0Z" transform="translate(1114 158)" fill="#d7816a"/>
+      </g>
+    </clipPath>
+  </defs>
+  <g id="Mask_Group_1" data-name="Mask Group 1" transform="translate(-1114 -158)" clip-path="url(#clip-path)">
+    <path id="Icon_material-camera" data-name="Icon material-camera" d="M115.533,132.459l73.4-127.1A158.575,158.575,0,0,0,155.54,1.667,153.629,153.629,0,0,0,58.292,36.288L114.61,134l.923-1.539Zm186.8-23.081a154.256,154.256,0,0,0-92.324-97.556l-56.318,97.556Zm4,15.387H191.085l4.462,7.694L268.791,259.4A152.5,152.5,0,0,0,309.414,155.54,155.778,155.778,0,0,0,306.336,124.765ZM102.3,155.54,42.289,51.676A153.222,153.222,0,0,0,1.667,155.54a155.779,155.779,0,0,0,3.077,30.775H120L102.3,155.54ZM8.745,201.7a154.256,154.256,0,0,0,92.324,97.556L157.387,201.7H8.745Zm173.415,0L122.15,305.721a158.575,158.575,0,0,0,33.391,3.693,153.629,153.629,0,0,0,97.248-34.622l-56.318-97.71L182.16,201.7Z" transform="translate(1373.92 107.92)" fill="#bd4f6c" opacity="0.15"/>
+  </g>
+</svg>
