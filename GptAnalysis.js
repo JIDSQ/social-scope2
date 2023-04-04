@@ -94,22 +94,36 @@ async function chatGPTCountRepetition(comments) {
 
 async function chatGPTTopNegativeComments(comments) {
   try {
+    // const toStringComments = comments.toString()
     const configuration = new Configuration({
       apiKey: process.env.OPENAI_API_KEY,
     });
 
+    const messages = [
+      {
+        role: "system",
+        content:
+          "You are an Social Marketing Expert that classify whether someones comments is negative or positive and filter only the negative sentiment comments in the prompt separated by commas, rank them based on the frequent use of words or phrase",
+      },
+      {
+        role: "user",
+        content: `${comments}`,
+      },
+      {
+        role: "assistant",
+        content:
+          "If there is no negative comments just reply 'no negative comment'. Give only the exact answer no more explanations",
+      },
+    ];
+
     const openai = new OpenAIApi(configuration);
 
-    const response = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt: `Filter only the negative sentiment comments in the prompt separated by commas  and rank them based on the frequent use of words or phrase:  ${comments} `,
-      temperature: 0.7,
-      max_tokens: 3475,
-      top_p: 1,
-      frequency_penalty: 0,
-      presence_penalty: 0,
+    const response = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages,
     });
-    return response.data.choices[0].text;
+
+    return response.data.choices[0].message.content;
   } catch (error) {
     console.log(error);
   }
