@@ -6,7 +6,7 @@ import Logo from '../assets/Image 1.png'
 import Mask from '../assets/MaskGroup 1.svg'
 import { useCreateModal } from '../shared/Modal'
 import AddModal from './modals/AddModal'
-import { CreateImageRequestResponseFormatEnum } from 'openai'
+import BarChart from './BarChart'
 
 type configType = {
     height: number
@@ -55,6 +55,8 @@ interface response {
 const Dashboard = () => {
     const [response, setResponse] = React.useState<any>({})
 
+    console.log(response)
+
     const config: configInterface = {
         positive: {
             height: 70,
@@ -101,8 +103,6 @@ const Dashboard = () => {
         })
     }
 
-    console.log(response)
-
     return (
         <div className="p-4 sm:ml-64">
             <div className=" mb-4">
@@ -133,8 +133,8 @@ const Dashboard = () => {
 
                 <div className="grid grid-cols-3 grid-flow-col gap-4 mb-10">
                     <div className=" flex items-center justify-center  rounded  ">
-                        <div className="min-w-[24rem] min-h-[20rem] bg-white border  border-gray-200 rounded-lg  ">
-                            <div className="h-min p-5 bg-secondary bg-divImg bg-center rounded-t-lg text-white bg-contain">
+                        <div className="w-[50rem] max-w-[50rem] bg-white border  border-gray-200 rounded-lg  ">
+                            <div className="h-[7rem] max-h-[7rem] p-5 bg-secondary bg-divImg bg-no-repeat bg-right rounded-t-lg text-white bg-contain">
                                 <a href="#">
                                     <h5 className="mb-2 text-xl ">
                                         Top five negative phrases
@@ -150,18 +150,24 @@ const Dashboard = () => {
                                 </p>
                             </div>
                             <div className="p-5">
-                                <p className="mb-3 font-normal  text-gray-400">
-                                    {!_.isEmpty(response)
+                                <p className="flex justify-center mb-3 font-normal  text-gray-400">
+                                    {/* {!_.isEmpty(response)
                                         ? response.top_negative_comments
                                         : 'Tempor dolor aute laboris dolor est enim laborum culpa veniam magna nulla ut. Dolor amet sit anim dolore. Excepteur aliqua est sit irure ex Lorem. Consectetur proident duis reprehenderit in proident id incididunt officia laboris ea officia est.'}
+                               */}
+                                    <BarChart
+                                        topComments={
+                                            response?.top_negative_comments
+                                        }
+                                    />
                                 </p>
                             </div>
                         </div>
                     </div>
                     <div className="col-span-2 items-center justify-center rounded ">
-                        <div className=" flex items-center justify-center rounded  ">
-                            <div className=" bg-white border min-h-[20rem] min-w-[49rem]  border-gray-200 rounded-lg shadow ">
-                                <div className="h-min p-5 bg-secondary bg-divImg bg-no-repeat bg-right rounded-t-lg text-white bg-contain">
+                        <div className=" flex items-center justify-center rounded h-full ">
+                            <div className=" bg-white border h-[100%] max-w-[100%] border-gray-200 rounded-lg shadow ">
+                                <div className="h-[7rem] max-h-[7rem] p-5 bg-secondary bg-divImg bg-no-repeat bg-right rounded-t-lg text-white bg-contain">
                                     <a href="#">
                                         <h5 className="mb-2 text-xl ">
                                             Most requested change
@@ -190,17 +196,15 @@ const Dashboard = () => {
                                                     )
                                             ) : (
                                                 <p className="mb-3 font-normal text-gray-400 ">
-                                                    'Minim incididunt veniam
-                                                    sint ex consectetur occaecat
-                                                    enim minim Lorem minim magna
-                                                    pariatur. Non deserunt
-                                                    proident non aliqua. Duis
-                                                    veniam nulla voluptate
-                                                    cupidatat ipsum adipisicing
-                                                    minim qui in cillum enim.
-                                                    Voluptate deserunt mollit
-                                                    aute nisi do nostrud
-                                                    veniam.'
+                                                    Lorem, ipsum dolor sit amet
+                                                    consectetur adipisicing
+                                                    elit. Placeat eligendi
+                                                    provident molestiae, laborum
+                                                    dolorum ab quam atque
+                                                    asperiores, nisi incidunt
+                                                    sint quisquam earum hic, ut
+                                                    error repudiandae eveniet
+                                                    culpa minus.
                                                 </p>
                                             )}
                                         </li>
@@ -218,7 +222,12 @@ const Dashboard = () => {
                             <div className="border-l-2 px-4">
                                 <span className="block">Positive </span>
                                 <span className="block text-textSecondary">
-                                    566 <span>Total Users</span>
+                                    {!_.isEmpty(
+                                        parseInt(response.comments_positive)
+                                    )
+                                        ? parseInt(response.comments_positive)
+                                        : 2232}{' '}
+                                    <span>Total Positive Comments</span>
                                 </span>
                             </div>
                         </div>
@@ -229,7 +238,12 @@ const Dashboard = () => {
                             <div className="border-l-2 px-4">
                                 <span className="block">Negative </span>
                                 <span className="block text-textSecondary">
-                                    566 <span>Total Users</span>
+                                    {!_.isEmpty(
+                                        parseInt(response.comments_negative)
+                                    )
+                                        ? parseInt(response.comments_negative)
+                                        : 8832}{' '}
+                                    <span>Total Negative Comments</span>
                                 </span>
                             </div>
                         </div>
@@ -240,7 +254,12 @@ const Dashboard = () => {
                             <div className="border-l-2 px-4">
                                 <span className="block">Neutral </span>
                                 <span className="block text-textSecondary">
-                                    566 <span>Total Users</span>
+                                    {!_.isEmpty(
+                                        parseInt(response.comments_neutral)
+                                    )
+                                        ? parseInt(response.comments_neutral)
+                                        : 924}{' '}
+                                    <span>Total Neutral Comments</span>
                                 </span>
                             </div>
                         </div>

@@ -138,63 +138,6 @@ ModalProvider.propTypes = {
     ]).isRequired,
 }
 
-export function ModalCard({ title, children, onMinimize, onClose, size }: any) {
-    const showHeader = useMemo(
-        () => title || onClose || onMinimize,
-        [title, onClose, onMinimize]
-    )
-    return (
-        <div className={`modal-card ${size}`} style={{ height: 'max-content' }}>
-            {showHeader && (
-                <header className="bg-white px-5 py-5 flex border-b rounded-t-lg">
-                    {title && (
-                        <h2 className="text-black font-medium text-xl">
-                            {title}
-                        </h2>
-                    )}
-                    <div className="ml-auto flex">
-                        {onMinimize && (
-                            <button onClick={onMinimize}>
-                                <i className="far fa-window-minimize text-black" />
-                            </button>
-                        )}
-                        {onClose && (
-                            <button className="ml-4" onClick={onClose}>
-                                <i className="fa fa-times text-black" />
-                            </button>
-                        )}
-                    </div>
-                </header>
-            )}
-            {children}
-        </div>
-    )
-}
-
-ModalCard.defaultProps = {
-    title: '',
-    size: 'md',
-    onClose: null,
-    onMinimize: null,
-}
-
-ModalCard.propTypes = {
-    title: PropTypes.string,
-    onMinimize: PropTypes.oneOfType([
-        PropTypes.func,
-        PropTypes.instanceOf(Object),
-    ]),
-    onClose: PropTypes.oneOfType([
-        PropTypes.func,
-        PropTypes.instanceOf(Object),
-    ]),
-    size: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl', '2xl']),
-    children: PropTypes.oneOfType([
-        PropTypes.arrayOf(PropTypes.node),
-        PropTypes.node,
-    ]).isRequired,
-}
-
 export const useCreateModal = (key = 'modal', state = {}) => {
     const { setModals, setStates } = useContext<any>(ModalContext)
     const prevStateRef = useRef<any>(null)
