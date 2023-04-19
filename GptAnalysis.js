@@ -165,6 +165,43 @@ async function chatGPTRequested(comments) {
   }
 }
 
+async function chatGPTPositiveComments(comments, data) {
+  return;
+
+  // try {
+  //   const configuration = new Configuration({
+  //     apiKey: process.env.OPENAI_API_KEY,
+  //   });
+
+  //   const messages = [
+  //     {
+  //       role: "system",
+  //       content:
+  //         "You are an Social Marketing Expert that get a promt in the format {Post 1:[Comment 1, Comment 2, ...], ...} and you will get the context of the post in maximum of 3 words and count the number of positive comment that specific post receive",
+  //     },
+
+  //     { role: "user", content: str(mydict) },
+
+  //     {
+  //       role: "assistant",
+  //       content:
+  //         "Your response should only be {Post Context: Number of positive comments, Post Context: Number of positive comments} it should be inside {} and do not put the whole post on the context",
+  //     },
+  //   ];
+
+  //   const openai = new OpenAIApi(configuration);
+
+  //   const response = await openai.createChatCompletion({
+  //     model: "gpt-3.5-turbo",
+  //     messages,
+  //   });
+
+  //   return response.data.choices[0].message.content;
+  // } catch (error) {
+  //   console.log(error);
+  // }
+}
+
 module.exports = {
   chatGPTPositive,
   chatGPTNeutral,
@@ -172,4 +209,5 @@ module.exports = {
   chatGPTCountRepetition,
   chatGPTTopNegativeComments,
   chatGPTRequested,
+  chatGPTPositiveComments,
 };

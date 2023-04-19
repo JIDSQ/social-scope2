@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const axios = require("axios");
+
 const {
   chatGPTPositive,
   chatGPTNeutral,
@@ -9,9 +10,13 @@ const {
   chatGPTCountRepetition,
   chatGPTTopNegativeComments,
   chatGPTRequested,
+  chatGPTPositiveComments,
 } = require("./GptAnalysis");
 const { getPostIDs, getAllComments, getFacebookID } = require("./MetaApi");
+const { FetchAllComments } = require("./hooks");
+
 const app = express();
+
 require("dotenv").config();
 
 app.use(cors());
@@ -25,17 +30,22 @@ app.get("/analysis", async (req, res) => {
     const { data } = await getPostIDs(fb_id, token);
     const response = await getFacebookID(token);
     const comments = await getAllComments(data.data, token);
-    const countPositive = await chatGPTPositive(comments);
-    const countNeutral = await chatGPTNeutral(comments);
-    const countNegative = await chatGPTNegative(comments);
-    const countRepeatComments = await chatGPTCountRepetition(comments);
-    const rankNegativeComments = await chatGPTTopNegativeComments(comments);
-    const suggestion = await chatGPTRequested(comments);
+    const PositiveComments = await chatGPTPositiveComments(comments, data);
+
+    const allComments = FetchAllComments(comments);
+
+    const countPositive = await chatGPTPositive(allComments);
+    const countNeutral = await chatGPTNeutral(allComments);
+    const countNegative = await chatGPTNegative(allComments);
+    const countRepeatComments = await chatGPTCountRepetition(allComments);
+    const rankNegativeComments = await chatGPTTopNegativeComments(allComments);
+    const suggestion = await chatGPTRequested(allComments);
 
     const payload = {
       facebook: response?.data,
-      comments: comments,
-      total_comments: comments?.length,
+      comments: allComments,
+      total_comments: allComments?.length,
+      PositiveComments: PositiveComments,
       comments_positive: countPositive,
       comments_neutral: countNeutral,
       comments_negative: countNegative,

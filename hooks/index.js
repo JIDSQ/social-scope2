@@ -4,4 +4,10 @@ function FilterComments(data) {
   return filter.flat(1);
 }
 
-module.exports = FilterComments;
+function FetchAllComments(data) {
+  const filter = data?.map((item) => item?.message);
+
+  return filter.flat(1);
+}
+
+module.exports = { FilterComments, FetchAllComments };
