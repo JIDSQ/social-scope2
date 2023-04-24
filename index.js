@@ -30,7 +30,7 @@ app.get("/analysis", async (req, res) => {
     const { data } = await getPostIDs(fb_id, token);
     const response = await getFacebookID(token);
     const comments = await getAllComments(data.data, token);
-    const PositiveComments = await chatGPTPositiveComments(comments, data);
+    const PositiveComments = await chatGPTPositiveComments(comments);
 
     const allComments = FetchAllComments(comments);
 
