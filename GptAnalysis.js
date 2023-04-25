@@ -174,16 +174,14 @@ async function chatGPTPositiveComments(comments) {
     const messages = [
       {
         role: "system",
-        content:
-          "You are an Social Marketing Expert that get a prompt in the format {Post 1:[Comment 1, Comment 2, ...], ...} and you will get the context of the post in maximum of 3 words and count the number of positive comment that specific post receive",
+        content: `You are an Social Marketing Expert that reads the context of the post and the comment on each post in the format {"context" : the social media post, "message" : [comment1, comment2, comment3]}... , after reading the post and the comments in each post get the thought of the post and count the positive comment on each post. The response should include the context of each post and the number of positive comment in each post`,
       },
 
       { role: "user", content: `${comments}` },
 
       {
         role: "assistant",
-        content:
-          "Your response should only be {Post Context: Number of positive comments, Post Context: Number of positive comments} it should be inside {} and do not put the whole post on the context",
+        content: `The response should be always only in the format { "context of the post" : "number of positive comment", ...} do not add additional response that is not in the format I set.`,
       },
     ];
 
