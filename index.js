@@ -11,6 +11,7 @@ const {
   chatGPTTopNegativeComments,
   chatGPTRequested,
   chatGPTPositiveComments,
+  chatGPT_Government_Projects_Suggestion,
 } = require("./GptAnalysis");
 const { getPostIDs, getAllComments, getFacebookID } = require("./MetaApi");
 const { FetchAllComments } = require("./hooks");
@@ -32,26 +33,30 @@ app.get("/analysis", async (req, res) => {
     const comments = await getAllComments(data.data, token);
     const PositiveComments = await chatGPTPositiveComments(comments);
 
-    const allComments = FetchAllComments(comments);
+    const allComments = await FetchAllComments(comments);
 
     const countPositive = await chatGPTPositive(allComments);
     const countNeutral = await chatGPTNeutral(allComments);
     const countNegative = await chatGPTNegative(allComments);
     const countRepeatComments = await chatGPTCountRepetition(allComments);
     const rankNegativeComments = await chatGPTTopNegativeComments(allComments);
+    const governmentSuggestions = await chatGPT_Government_Projects_Suggestion(
+      rankNegativeComments
+    );
     const suggestion = await chatGPTRequested(allComments);
 
     const payload = {
       facebook: response?.data,
       comments: allComments,
       total_comments: allComments?.length,
-      PositiveComments: PositiveComments,
+      top_positive_comments: PositiveComments,
       comments_positive: countPositive,
       comments_neutral: countNeutral,
       comments_negative: countNegative,
       comments_negative_repetition: countRepeatComments,
       top_negative_comments: rankNegativeComments,
       suggestion: suggestion,
+      governmentSuggestions: governmentSuggestions,
     };
 
     res.status(200).send(payload);

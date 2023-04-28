@@ -106,7 +106,7 @@ async function chatGPTTopNegativeComments(comments) {
       },
       {
         role: "user",
-        content: `${comments[0]}`,
+        content: `${comments}`,
       },
       {
         role: "assistant",
@@ -198,6 +198,33 @@ async function chatGPTPositiveComments(comments) {
   }
 }
 
+async function chatGPT_Government_Projects_Suggestion(comments) {
+  try {
+    const configuration = new Configuration({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+
+    const messages = [
+      {
+        role: "system",
+        content: `You are an Social Marketing Expert that give a list of different government project suggestion that can help in solving the problem. The suggestion must include the title of the project,  a short 2 to 3 sentences description, an estimated cost of the project in Philippine currency and the estimated time-frame for the project. The response must only follow the format: { 'Title': 'title of the project', 'Description': 'Description', 'Budget': 'Estimated budget', 'Time-frame' : 'Estimated time-frame'}, the response must only the one inside { } remove any additional wordings outside the { }`,
+      },
+      { role: "user", content: `${comments}` },
+    ];
+
+    const openai = new OpenAIApi(configuration);
+
+    const response = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages,
+    });
+
+    return response.data.choices[0].message.content;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 module.exports = {
   chatGPTPositive,
   chatGPTNeutral,
@@ -206,4 +233,5 @@ module.exports = {
   chatGPTTopNegativeComments,
   chatGPTRequested,
   chatGPTPositiveComments,
+  chatGPT_Government_Projects_Suggestion,
 };
