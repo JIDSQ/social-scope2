@@ -174,14 +174,12 @@ async function chatGPTPositiveComments(comments) {
     const messages = [
       {
         role: "system",
-        content: `You are an Social Marketing Expert that reads the context of the post and the comment on each post in the format {"context" : the social media post, "message" : [comment1, comment2, comment3]}... , after reading the post and the comments in each post get the thought of the post and count the positive comment on each post. The response should include the context of each post and the number of positive comment in each post`,
+        content: `You are an Social Marketing Expert that reads the context of the post and the comment on each post in the format {"context" : the first social media post, "message" : [comment on 1st social media post, comment on 1st social media post, comment on 1st social media post]}, {"context" : the second social media post, "message" : [comment on 2nd social media post, comment on 2nd social media post, comment on 2nd social media post, and so on]}, and so on after reading the post and the comments in each post get the thought of the post and count the positive comment on each post. The response should include the context of each post and the number of positive comment in each post`,
       },
-
-      { role: "user", content: `${comments}` },
-
+      { role: "user", content: JSON.stringify(comments) },
       {
         role: "assistant",
-        content: `The response should be always only in the format { "context of the post" : "number of positive comment", ...} do not add additional response that is not in the format I set.`,
+        content: `The response should be always only in the format { "context of the post" : "number of positive comment, number only", "context of the second post" : "number of positive comment in the second post", and so on} do not add additional response that is not in the format I set.`,
       },
     ];
 
@@ -199,6 +197,7 @@ async function chatGPTPositiveComments(comments) {
 }
 
 async function chatGPT_Government_Projects_Suggestion(comments) {
+  let parseKeys = Object.keys(JSON.parse(comments));
   try {
     const configuration = new Configuration({
       apiKey: process.env.OPENAI_API_KEY,
@@ -209,7 +208,7 @@ async function chatGPT_Government_Projects_Suggestion(comments) {
         role: "system",
         content: `You are an Social Marketing Expert that give a list of different government project suggestion that can help in solving the problem. The suggestion must include the title of the project,  a short 2 to 3 sentences description, an estimated cost of the project in Philippine currency and the estimated time-frame for the project. The response must only follow the format: { 'Title': 'title of the project', 'Description': 'Description', 'Budget': 'Estimated budget', 'Time-frame' : 'Estimated time-frame'}, the response must only the one inside { } remove any additional wordings outside the { }`,
       },
-      { role: "user", content: `${comments}` },
+      { role: "user", content: `${parseKeys.flat(1)}` },
     ];
 
     const openai = new OpenAIApi(configuration);
