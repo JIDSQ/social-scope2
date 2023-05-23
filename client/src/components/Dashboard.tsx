@@ -57,6 +57,8 @@ const Dashboard = () => {
 
     console.log(response)
 
+    console.log(response)
+
     const config: configInterface = {
         positive: {
             height: 70,
@@ -222,9 +224,7 @@ const Dashboard = () => {
                             <div className="border-l-2 px-4">
                                 <span className="block">Positive </span>
                                 <span className="block text-textSecondary">
-                                    {!_.isEmpty(
-                                        parseInt(response.comments_positive)
-                                    )
+                                    {!_.isEmpty(response.comments_positive)
                                         ? parseInt(response.comments_positive)
                                         : 2232}{' '}
                                     <span>Total Positive Comments</span>
@@ -238,9 +238,7 @@ const Dashboard = () => {
                             <div className="border-l-2 px-4">
                                 <span className="block">Negative </span>
                                 <span className="block text-textSecondary">
-                                    {!_.isEmpty(
-                                        parseInt(response.comments_negative)
-                                    )
+                                    {!_.isEmpty(response.comments_negative)
                                         ? parseInt(response.comments_negative)
                                         : 8832}{' '}
                                     <span>Total Negative Comments</span>
@@ -254,9 +252,7 @@ const Dashboard = () => {
                             <div className="border-l-2 px-4">
                                 <span className="block">Neutral </span>
                                 <span className="block text-textSecondary">
-                                    {!_.isEmpty(
-                                        parseInt(response.comments_neutral)
-                                    )
+                                    {!_.isEmpty(response.comments_neutral)
                                         ? parseInt(response.comments_neutral)
                                         : 924}{' '}
                                     <span>Total Neutral Comments</span>
