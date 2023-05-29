@@ -1,5 +1,5 @@
-const axios = require("axios");
-const { FilterComments } = require("./hooks");
+const axios = require('axios');
+const { FilterComments } = require('./hooks');
 
 async function getFacebookID(token) {
   //Facebook Graph API
@@ -56,4 +56,17 @@ async function getAllComments(data, token) {
   }
 }
 
-module.exports = { getPostIDs, getAllComments, getFacebookID };
+async function getFollower(page_id, token) {
+  //Facebook Graph API
+  try {
+    const response = await axios.get(
+      `https://graph.facebook.com/v16.0/${page_id}?fields=fan_count&access_token=${token}`
+    );
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+module.exports = { getPostIDs, getAllComments, getFacebookID, getFollower };
