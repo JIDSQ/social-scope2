@@ -35,7 +35,6 @@ app.get('/analysis', async (req, res) => {
 
     const { data } = await getPostIDs(fb_id, token);
     const { fan_count } = await getFollower(fb_id, token);
-    console.log(fan_count);
     const response = await getFacebookID(token);
     const comments = await getAllComments(data.data, token);
     const allComments = await FetchAllComments(comments);
@@ -76,7 +75,7 @@ app.get('/analysis', async (req, res) => {
 
 app.post('/exchange-token', async (req, res) => {
   const { shortLivedToken } = req.body;
-  const appId = process.env.appId;
+  const appId = process.env.appID;
   const appSecret = process.env.appSecret;
   try {
     const response = await axios.get(
@@ -88,6 +87,41 @@ app.post('/exchange-token', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.sendStatus(500);
+  }
+});
+
+app.get('/government_project', async (req, res) => {
+  try {
+    const fb_id = req.query.id;
+    const token = req.query.token;
+
+    const { data } = await getPostIDs(fb_id, token);
+    const comments = await getAllComments(data.data, token);
+
+    const allComments = await FetchAllComments(comments);
+    const rankNegativeComments = await chatGPTTopNegativeComments(allComments);
+    const governmentSuggestions = await chatGPT_Government_Projects_Suggestion(
+      rankNegativeComments
+    );
+
+    if (governmentSuggestions.includes('[{')) {
+      const payload = {
+        governmentSuggestions: governmentSuggestions.substring(
+          governmentSuggestions.indexOf('['),
+          governmentSuggestions.indexOf(']') + 1
+        ),
+      };
+
+      res.status(200).send(payload);
+    } else {
+      const payload = {
+        governmentSuggestions: 'Reload',
+      };
+      res.status(200).send(payload);
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
   }
 });
 
