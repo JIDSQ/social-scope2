@@ -92,6 +92,42 @@ async function chatGPTCountRepetition(comments) {
   }
 }
 
+//rank the comment as positive, negative and neutral
+async function chatGPTSentimentAnalysis(comments) {
+  try {
+    const configuration = new Configuration({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+
+    const messages = [
+      {
+        role: 'system',
+        content:
+          'You are an Social Marketing Expert that classify whether someones comments is negative, positive, neutral and unable to classify then count how many positive, negative, neutral, and unclassify comment are there.',
+      },
+      {
+        role: 'user',
+        content: `${comments}`,
+      },
+      {
+        role: 'assistant',
+        content: `the response should be in the format {positive: number of positive comments, negative: number of negative comments, neutral: number of neutral comments, unclassified: number of unclassified comments }, the total of the positive, negative and neutral comment should be equal to the number of total comments.`,
+      },
+    ];
+
+    const openai = new OpenAIApi(configuration);
+
+    const response = await openai.createChatCompletion({
+      model: 'gpt-3.5-turbo',
+      messages,
+    });
+
+    return response.data.choices[0].message.content;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 async function chatGPTTopNegativeComments(comments) {
   try {
     const configuration = new Configuration({
@@ -196,6 +232,38 @@ async function chatGPTPositiveComments(comments) {
   }
 }
 
+//Posotve comment list
+async function chatGPTListPositiveComments(comments) {
+  try {
+    const configuration = new Configuration({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+
+    const messages = [
+      {
+        role: 'system',
+        content: `You are an Social Marketing Expert that reads comments on a social media platform and list out all the positive comment`,
+      },
+      { role: 'user', content: JSON.stringify(comments) },
+      {
+        role: 'assistant',
+        content: `The response should be always only in the format {positive comment 1, positive comment 1 } no additional data outside the {}`,
+      },
+    ];
+
+    const openai = new OpenAIApi(configuration);
+
+    const response = await openai.createChatCompletion({
+      model: 'gpt-3.5-turbo',
+      messages,
+    });
+
+    return response.data.choices[0].message.content;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 async function chatGPT_Government_Projects_Suggestion(comments) {
   let parseKeys = Object.keys(JSON.parse(comments));
   try {
@@ -232,5 +300,7 @@ module.exports = {
   chatGPTTopNegativeComments,
   chatGPTRequested,
   chatGPTPositiveComments,
+  chatGPTListPositiveComments,
   chatGPT_Government_Projects_Suggestion,
+  chatGPTSentimentAnalysis,
 };

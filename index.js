@@ -11,7 +11,9 @@ const {
   chatGPTTopNegativeComments,
   chatGPTRequested,
   chatGPTPositiveComments,
+  chatGPTListPositiveComments,
   chatGPT_Government_Projects_Suggestion,
+  chatGPTSentimentAnalysis,
 } = require('./GptAnalysis');
 const {
   getPostIDs,
@@ -39,16 +41,18 @@ app.get('/analysis', async (req, res) => {
     const comments = await getAllComments(data.data, token);
     const allComments = await FetchAllComments(comments);
 
+    //const ListPositiveComment = await chatGPTListPositiveComments(comments);
     const PositiveComments = await chatGPTPositiveComments(comments);
-    const countPositive = await chatGPTPositive(allComments);
-    const countNeutral = await chatGPTNeutral(allComments);
-    const countNegative = await chatGPTNegative(allComments);
+    //const Sentiment_analysis = await chatGPTSentimentAnalysis(allComments);
+    //const countPositive = await chatGPTPositive(allComments);
+    //const countNeutral = await chatGPTNeutral(allComments);
+    //const countNegative = await chatGPTNegative(allComments);
     const countRepeatComments = await chatGPTCountRepetition(allComments);
     const rankNegativeComments = await chatGPTTopNegativeComments(allComments);
 
-    const governmentSuggestions = await chatGPT_Government_Projects_Suggestion(
+    /* const governmentSuggestions = await chatGPT_Government_Projects_Suggestion(
       rankNegativeComments
-    );
+    );*/
     const suggestion = await chatGPTRequested(allComments);
 
     const payload = {
@@ -57,13 +61,15 @@ app.get('/analysis', async (req, res) => {
       follower: fan_count,
       total_comments: allComments?.length,
       top_positive_comments: PositiveComments,
-      comments_positive: countPositive,
-      comments_neutral: countNeutral,
-      comments_negative: countNegative,
+      //positive_comment: ListPositiveComment,
+      //sentiment_analysis: Sentiment_analysis,
+      //comments_positive: countPositive,
+      //comments_neutral: countNeutral,
+      //comments_negative: countNegative,
       comments_negative_repetition: countRepeatComments,
       top_negative_comments: rankNegativeComments,
       suggestion: suggestion,
-      governmentSuggestions: governmentSuggestions,
+      //governmentSuggestions: governmentSuggestions,
     };
 
     res.status(200).send(payload);
@@ -116,6 +122,73 @@ app.get('/government_project', async (req, res) => {
     } else {
       const payload = {
         governmentSuggestions: 'Reload',
+      };
+      res.status(200).send(payload);
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+});
+
+app.get('/count_sentiment_analysis', async (req, res) => {
+  try {
+    const fb_id = req.query.id;
+    const token = req.query.token;
+
+    const { data } = await getPostIDs(fb_id, token);
+    const comments = await getAllComments(data.data, token);
+
+    const allComments = await FetchAllComments(comments);
+    const Sentiment_analysis = await chatGPTSentimentAnalysis(allComments);
+
+    console.log(allComments);
+
+    if (Sentiment_analysis.includes('{')) {
+      const payload = {
+        sentiment_analysis: Sentiment_analysis.substring(
+          Sentiment_analysis.indexOf('{'),
+          Sentiment_analysis.indexOf('}') + 1
+        ),
+      };
+
+      res.status(200).send(payload.sentiment_analysis);
+    } else {
+      const payload = {
+        Sentiment_analysis: 'Reload',
+      };
+      res.status(200).send(payload);
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+});
+
+app.get('/list_positive_comment', async (req, res) => {
+  try {
+    const fb_id = req.query.id;
+    const token = req.query.token;
+
+    const { data } = await getPostIDs(fb_id, token);
+    const comments = await getAllComments(data.data, token);
+
+    const ListPositiveComment = await chatGPTListPositiveComments(comments);
+
+    console.log(comments);
+
+    if (ListPositiveComment.includes('{')) {
+      const payload = {
+        list_positive_comments: ListPositiveComment.substring(
+          ListPositiveComment.indexOf('{'),
+          ListPositiveComment.indexOf('}') + 1
+        ),
+      };
+
+      res.status(200).send(payload.list_positive_comments);
+    } else {
+      const payload = {
+        list_positive_comments: 'Reload',
       };
       res.status(200).send(payload);
     }
