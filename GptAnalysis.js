@@ -103,15 +103,11 @@ async function chatGPTSentimentAnalysis(comments) {
       {
         role: 'system',
         content:
-          'You are an Social Marketing Expert that classify whether someones comments is negative, positive, neutral and unable to classify then count how many positive, negative, neutral, and unclassify comment are there.',
+          'Count the number of comment and classify whether each comment is negative, positive, or neutral the comment in the prompt is in the format ["comment 1","comment 2" ...] . Provide JSON format response with keys for total, positive, negative and neutral. Provide count only. No explanations. The total number of comment must be equal to the sum of the number of positive. negative and neutral comments',
       },
       {
         role: 'user',
-        content: `${comments}`,
-      },
-      {
-        role: 'assistant',
-        content: `the response should be in the format {positive: number of positive comments, negative: number of negative comments, neutral: number of neutral comments, unclassified: number of unclassified comments }, the total of the positive, negative and neutral comment should be equal to the number of total comments.`,
+        content: JSON.stringify(comments),
       },
     ];
 
@@ -138,11 +134,11 @@ async function chatGPTTopNegativeComments(comments) {
       {
         role: 'system',
         content:
-          'You are an Social Marketing Expert that classify whether someones comments is negative or positive and filter only the negative sentiment comments in the prompt separated by commas and rank them based on the frequent use of words or phrase',
+          'Classify whether someones comments is negative or positive and filter only the negative sentiment comments in the prompt separated by commas and rank them based on the frequent use of words or phrase',
       },
       {
         role: 'user',
-        content: `${comments}`,
+        content: comments.toString(),
       },
       {
         role: 'assistant',
