@@ -42,7 +42,7 @@ app.get('/analysis', async (req, res) => {
     const allComments = await FetchAllComments(comments);
 
     //const ListPositiveComment = await chatGPTListPositiveComments(comments);
-    const PositiveComments = await chatGPTPositiveComments(comments);
+    //const PositiveComments = await chatGPTPositiveComments(comments);
     //const Sentiment_analysis = await chatGPTSentimentAnalysis(allComments);
     //const countPositive = await chatGPTPositive(allComments);
     //const countNeutral = await chatGPTNeutral(allComments);
@@ -59,8 +59,8 @@ app.get('/analysis', async (req, res) => {
       facebook: response?.data,
       comments: allComments,
       follower: fan_count,
-      total_comments: allComments?.length,
-      top_positive_comments: PositiveComments,
+      //total_comments: allComments?.length,
+      //top_positive_comments: PositiveComments,
       //positive_comment: ListPositiveComment,
       //sentiment_analysis: Sentiment_analysis,
       //comments_positive: countPositive,
@@ -142,8 +142,6 @@ app.get('/count_sentiment_analysis', async (req, res) => {
     const allComments = await FetchAllComments(comments);
     const Sentiment_analysis = await chatGPTSentimentAnalysis(allComments);
 
-    console.log(allComments);
-
     if (Sentiment_analysis.includes('{')) {
       const payload = {
         sentiment_analysis: Sentiment_analysis.substring(
@@ -174,8 +172,6 @@ app.get('/list_positive_comment', async (req, res) => {
     const comments = await getAllComments(data.data, token);
 
     const ListPositiveComment = await chatGPTListPositiveComments(comments);
-
-    console.log(comments);
 
     if (ListPositiveComment.includes('{')) {
       const payload = {
