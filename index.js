@@ -173,11 +173,11 @@ app.get('/list_positive_comment', async (req, res) => {
 
     const ListPositiveComment = await chatGPTListPositiveComments(comments);
 
-    if (ListPositiveComment.includes('{')) {
+    if (ListPositiveComment.includes('[')) {
       const payload = {
         list_positive_comments: ListPositiveComment.substring(
-          ListPositiveComment.indexOf('{'),
-          ListPositiveComment.indexOf('}') + 1
+          ListPositiveComment.indexOf('['),
+          ListPositiveComment.indexOf(']') + 1
         ),
       };
 
