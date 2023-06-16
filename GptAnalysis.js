@@ -243,7 +243,7 @@ async function chatGPTListPositiveComments(comments) {
       { role: 'user', content: JSON.stringify(comments) },
       {
         role: 'assistant',
-        content: `The response should be always only in the format {positive comment 1, positive comment 1 } no additional data outside the {}`,
+        content: `The response should be always only in the format [positive comment 1, positive comment 1 ] no additional data outside the []`,
       },
     ];
 
