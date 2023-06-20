@@ -14,6 +14,19 @@ async function getFacebookID(token) {
   }
 }
 
+async function getPageProfile(fb_id, token) {
+  //Facebook Graph API
+  try {
+    const response = await axios.get(
+      `https://graph.facebook.com/v16.0/${fb_id}?fields=picture.width(200).height(200)&access_token=${token}`
+    );
+
+    return response.data.picture.data.url;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 async function getPostIDs(fb_id, token) {
   //Facebook Graph API
   try {
@@ -69,4 +82,10 @@ async function getFollower(page_id, token) {
   }
 }
 
-module.exports = { getPostIDs, getAllComments, getFacebookID, getFollower };
+module.exports = {
+  getPostIDs,
+  getAllComments,
+  getFacebookID,
+  getFollower,
+  getPageProfile,
+};
