@@ -4,22 +4,20 @@ const cors = require('cors');
 const axios = require('axios');
 
 const {
-  chatGPTPositive,
-  chatGPTNeutral,
-  chatGPTNegative,
   chatGPTCountRepetition,
   chatGPTTopNegativeComments,
   chatGPTRequested,
-  chatGPTPositiveComments,
   chatGPTListPositiveComments,
   chatGPT_Government_Projects_Suggestion,
   chatGPTSentimentAnalysis,
 } = require('./GptAnalysis');
+
 const {
   getPostIDs,
   getAllComments,
   getFacebookID,
   getFollower,
+  getPageProfile,
 } = require('./MetaApi');
 const { FetchAllComments } = require('./hooks');
 
@@ -37,39 +35,24 @@ app.get('/analysis', async (req, res) => {
 
     const { data } = await getPostIDs(fb_id, token);
     const { fan_count } = await getFollower(fb_id, token);
+    const profilePic = await getPageProfile(fb_id, token);
     const response = await getFacebookID(token);
     const comments = await getAllComments(data.data, token);
     const allComments = await FetchAllComments(comments);
 
-    //const ListPositiveComment = await chatGPTListPositiveComments(comments);
-    //const PositiveComments = await chatGPTPositiveComments(comments);
-    //const Sentiment_analysis = await chatGPTSentimentAnalysis(allComments);
-    //const countPositive = await chatGPTPositive(allComments);
-    //const countNeutral = await chatGPTNeutral(allComments);
-    //const countNegative = await chatGPTNegative(allComments);
     const countRepeatComments = await chatGPTCountRepetition(allComments);
     const rankNegativeComments = await chatGPTTopNegativeComments(allComments);
 
-    /* const governmentSuggestions = await chatGPT_Government_Projects_Suggestion(
-      rankNegativeComments
-    );*/
     const suggestion = await chatGPTRequested(allComments);
 
     const payload = {
       facebook: response?.data,
       comments: allComments,
       follower: fan_count,
-      //total_comments: allComments?.length,
-      //top_positive_comments: PositiveComments,
-      //positive_comment: ListPositiveComment,
-      //sentiment_analysis: Sentiment_analysis,
-      //comments_positive: countPositive,
-      //comments_neutral: countNeutral,
-      //comments_negative: countNegative,
+      url: profilePic,
       comments_negative_repetition: countRepeatComments,
       top_negative_comments: rankNegativeComments,
       suggestion: suggestion,
-      //governmentSuggestions: governmentSuggestions,
     };
 
     res.status(200).send(payload);
