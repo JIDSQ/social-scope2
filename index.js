@@ -64,15 +64,32 @@ app.get('/analysis', async (req, res) => {
 
 app.post('/exchange-token', async (req, res) => {
   const { shortLivedToken } = req.body;
+  const fb_id = req.query.id;
   const appId = process.env.appID;
   const appSecret = process.env.appSecret;
   try {
-    const response = await axios.get(
+    const responser = await axios.get(
       `https://graph.facebook.com/v16.0/oauth/access_token?grant_type=fb_exchange_token&client_id=${appId}&client_secret=${appSecret}&fb_exchange_token=${shortLivedToken}`
     );
-    const { access_token: longLivedToken } = response.data; // Use the longLivedToken to make API requests
+    const { access_token: longLivedToken } = responser.data; // Use the longLivedToken to make API requests
     console.log(longLivedToken);
+
     res.status(200).send({ longLivedToken: longLivedToken });
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
+});
+
+app.get('/paged-token', async (req, res) => {
+  const token = req.query.token;
+  const user_id = req.query.id;
+  try {
+    const responser = await axios.get(
+      `https://graph.facebook.com/${user_id}/accounts?fields=name,access_token&access_token=${token}`
+    );
+
+    res.status(200).send(responser.data.data);
   } catch (error) {
     console.error(error);
     res.sendStatus(500);
@@ -156,7 +173,10 @@ app.get('/list_positive_comment', async (req, res) => {
 
     const ListPositiveComment = await chatGPTListPositiveComments(comments);
 
-    if (ListPositiveComment.includes('[')) {
+    if (
+      ListPositiveComment.includes('[') ||
+      ListPositiveComment !== undefined
+    ) {
       const payload = {
         list_positive_comments: ListPositiveComment.substring(
           ListPositiveComment.indexOf('['),
